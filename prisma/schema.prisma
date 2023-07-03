@@ -1,0 +1,231 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets =  ["native", "debian-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://hoshiko:okmijn321@64.176.42.161:5432/e_commerce?schema=e_commerce"
+  shadowDatabaseUrl = "postgresql://hoshiko:okmijn321@64.176.42.161:5432/e_commerce?schema=e_commerce"
+}
+
+model User {
+  id             Int       @id @default(autoincrement())
+  providerName   String?
+  providerUserId String?
+  nickname       String    @default("User")
+  email          String    @unique
+  password       String?
+  avatar         String?
+  loginToken     String?
+  emailVerified  Boolean   @default(false)
+  emailVerifyCode String?
+  address        String?
+  phoneNumber    String?
+  orders         Order[]
+  ownGame 	 	   UserOwnGame[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  lastLoginAt    DateTime? @updatedAt
+}
+
+model UserOwnGame {
+  id             Int       @id @default(autoincrement())
+  userId		     Int	   
+  user			     User	     @relation(fields: [userId], references: [id])
+  gameId		     Int	   
+  game			     Game	     @relation(fields: [gameId], references: [id])
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Game {
+  id            Int        @id @default(autoincrement())
+  name          String     @default("新遊戲")
+  price         Decimal    @default(999)
+  currency      String     @default("TWD")
+  introduction  String?
+  folderName    String?
+  descriptionHtml String?
+  steamLink     String?
+  isShow        Boolean    @default(false)
+  product       Product[]
+  orderGame     OrderGame[]
+  userOwned 	  UserOwnGame[]
+  sortNumber    Int        @default(autoincrement())
+  headerImageUrl	String? 
+  imageUrl		  String? 
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+
+
+model Product {
+  id            Int       @id @default(autoincrement())
+  gameId        Int?     
+  game          Game?     @relation(fields: [gameId], references: [id])
+  name          String    @default("新產品")
+  isHot         Boolean   @default(false)
+  quantity      Int       @default(0)
+  descriptionHtml String?
+  specification String?
+  price         Decimal   @default(999)
+  folderName    String?
+  currency      String    @default("TWD")
+  introduction  String?
+  orderProduct  OrderProduct[]
+  sortNumber    Int       @default(autoincrement())
+  isShow        Boolean   @default(false)
+  imageUrl		  String? 
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model ProductLocalizationInfo {
+  id            Int      @id @default(autoincrement())
+  languageId    Int
+  productId     Int?    
+  productName   String?
+  subName       String?
+  videoUrl      String?
+  shortIntro    String?
+  LongIntro     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Order {
+  id              Int             @id @default(autoincrement())
+  userId          Int?
+  user            User?           @relation(fields: [userId], references: [id])
+  products        OrderProduct[]
+  games           OrderGame[]
+  paymentTypeId   Int
+  paymentType     PaymentType     @relation(fields: [paymentTypeId], references: [id])
+  shippingMethodId Int
+  shippingMethod  ShippingMethod  @relation(fields: [shippingMethodId], references: [id])
+  country         String?
+  deliveryAddress String      
+  recipientName   String
+  recipientPhoneNumber String
+  recipientEmail  String		  
+  totalPrices     Decimal  
+  orderNumber     String          @unique
+  statusId        Int?			      @default(1)
+  status          OrderStatus?    @relation(fields: [statusId], references: [id])  
+  note            String?
+  payNowInfo      PayNowInfo?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model OrderGame {
+  id            Int         @id @default(autoincrement())
+  gameId        Int
+  game          Game        @relation(fields: [gameId], references: [id])
+  price         Decimal
+  orderId       Int
+  order         Order       @relation(fields: [orderId], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model OrderProduct {
+  id            Int       @id @default(autoincrement())
+  productId     Int
+  product       Product   @relation(fields: [productId], references: [id])
+  price         Decimal
+  quantity      Int       @default(1)
+  orderId       Int
+  order         Order     @relation(fields: [orderId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model OrderStatus {
+  id            Int       @id @default(autoincrement())
+  name          String 
+  order         Order[]   
+}
+
+model PaymentType {
+  id        Int      @id @default(autoincrement())
+  name      String
+  Order     Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Language {
+  id        Int      @id @default(autoincrement())
+  name      String
+}
+
+model HomeBanner {
+  id             Int      @id @default(autoincrement())
+  imageUrl       String
+  hyperLink      String?
+  sortNumber     Int      @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model HomeBlock {
+  id             Int      @id @default(autoincrement())
+  imageUrl       String
+  hyperLink      String?
+  sortNumber     Int      @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Manager {
+  id             Int       @id @default(autoincrement())
+  nickname       String    @default("Alice")
+  email          String    @unique
+  password       String?
+  loginToken     String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  lastLoginAt    DateTime? @updatedAt
+}
+
+model ShippingMethod {
+  id             Int        @id @default(autoincrement())
+  name 			     String
+  order			     Order[]
+  deliveryFee    Decimal    @default(0)
+  updatedAt      DateTime?  @updatedAt
+}
+
+model ShopOption {
+  id             Int       @id @default(autoincrement())
+  name           String
+  value          String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model PayNowInfo {
+  id             Int       @id @default(autoincrement())
+  orderNo        String    
+  orderId        Int       @unique
+  order          Order     @relation(fields: [orderId], references: [id])
+  BuysafeNo      String
+  TranStatus     String
+  PayType        String
+  ErrDesc        String?
+  pan_no4        String?
+  installment    Int?
+  BarCode1       String?
+  BarCode2       String?
+  BarCode3       String?
+  BarCodeDueDate String?
+  others         String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}

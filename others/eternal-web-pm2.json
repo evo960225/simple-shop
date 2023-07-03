@@ -1,0 +1,7 @@
+{
+  "name": "eternal-alice",
+  "script": "index.mjs",
+  "cwd": "/home/EternalAlice/eternal-alice-web/web/server",
+  "instances": 1,
+  "exec_mode": "fork"
+}
