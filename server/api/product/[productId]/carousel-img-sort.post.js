@@ -1,5 +1,6 @@
 import db from '@/server/db'
 import fs from 'fs'
+import path from 'path'
 export default defineEventHandler(async(event) => {
 
   if (!event.context.authBackstage) {
@@ -26,6 +27,7 @@ export default defineEventHandler(async(event) => {
     const tmpFileName = `${ymd_date}-${i.toString().padStart(2, '0')}.jpg`
     try {
       await fs.promises.rename(`${imagesDir}/${fileName}`, `${imagesDir}/${tmpFileName}`)
+      await fs.promises.rename(`${imagesDir}/small/${fileName.split('.')[0]}-x500.jpg`, `${imagesDir}/small/${tmpFileName.split('.')[0]}-x500.jpg`)
     } catch (e) {
       createError({
         message: e.message,
@@ -35,7 +37,14 @@ export default defineEventHandler(async(event) => {
     }
   }
 
-  const newImagesName = fs.readdirSync(`${imagesDir}`);
+  const newImagesName = fs.readdirSync(`${imagesDir}`).filter((fileName) => {
+    const ext = path.extname(fileName);
+    if(ext !== '.jpg' && ext !== '.png') {
+      return false;
+    }
+    return true
+  })
+
 
   if (newImagesName.length === 0) {
     return createError({

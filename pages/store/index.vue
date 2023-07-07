@@ -7,7 +7,7 @@
         ">
         <div class="flex justify-center w-full items-center aspect-square">
           <NuxtLink :to="`/store/${value.id}`" class="h-full">
-            <img :src="value.imageUrl" class="w-full h-full object-contain" />
+            <img :src="value.imageUrl" class="w-full h-full object-contain" :loading="index>8?'lazy':''" />
           </NuxtLink>
         </div>
 
@@ -58,8 +58,20 @@ const loadingStore = useIsPageLoadingStore()
 const errorStore = useShowErrorMessageStore()
 const { products, count } = storeToRefs(cartStore)
 
-const { data:productData } = await useFetch('/api/product/client', {
-  method: 'GET'
+const { data: productData } = await useFetch('/api/product/client', {
+  method: 'GET',
+  key: 'product-data' + hash
+})
+
+// change image url to 500px
+productData.value.forEach((x) => {
+
+  // get base url
+  const arrUrl = x.imageUrl.split('/')
+  const baseUrl = arrUrl.slice(0, -1).join('/')
+  const fileName = arrUrl.pop()
+  const smallFileName = fileName.split('.')[0] + '-x500.jpg'
+  x.imageUrl = `${baseUrl}/small/${smallFileName}`
 })
 
 

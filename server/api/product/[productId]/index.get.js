@@ -1,5 +1,6 @@
 import db from '@/server/db'
 import fs from 'fs'
+import path from 'path'
 import TurndownService from 'turndown'
 
 export default defineEventHandler(async(event) => {
@@ -21,7 +22,20 @@ export default defineEventHandler(async(event) => {
 
   const record = await db.product.find(id)
   const carouselImages = fs.readdirSync(`${imagesDir}`);
-  record.carouselImages = carouselImages
+
+  // filter out non-image files
+  record.carouselImages = carouselImages.filter((file) => {
+    const ext = path.extname(file);
+    return ext === '.jpg' || ext === '.png'
+  })
+
+  // change small image name
+  record.carouselImagesSmall = record.carouselImages.map((file) => {
+    const ext = path.extname(file);
+    const fileName = file.split('.')[0]
+    return `${fileName}-x500${ext}`
+  })
+
   const turndownService = new TurndownService()
 
 

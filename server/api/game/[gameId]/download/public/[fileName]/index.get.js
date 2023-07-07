@@ -1,7 +1,6 @@
 import db from '@/server/db'
 import { PrismaClient } from '@prisma/client'
 import fs from 'node:fs'
-import https from 'https'
 import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 

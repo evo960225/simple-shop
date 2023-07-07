@@ -23,6 +23,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     fs.unlinkSync(`${imagesDir}/${fileName}`)
+    fs.unlinkSync(`${imagesDir}/small/${fileName.split('.')[0]}-x500.jpg`)
   } catch (error) {
     return createError({
       message: error.message,

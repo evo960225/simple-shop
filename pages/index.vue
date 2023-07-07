@@ -22,7 +22,7 @@
               <img v-if="index===0" 
                 class="carousel-img animated-element max-h-full max-w-full" :src="data.imageUrl">
               <img v-else
-                class="carousel-img max-h-full max-w-full" v-lazyload="data.imageUrl">
+                class="carousel-img max-h-full max-w-full" v-lazyload="data.imageUrl" loading="lazy">
             </NuxtLink>
           </div>
         </n-carousel>
@@ -86,11 +86,13 @@
                 <div class="group p-1 ">
                   
                   <nuxt-link :to="`/store/${product.id}`">
-                    <div class="relative overflow-hidden aspect-square border-1 border-gray-300 transition duration-250 group-hover:opacity-70">
+                    <div class="relative overflow-hidden aspect-square min-h-[250px] min-w-[250px] 
+                      border-1 border-gray-300 transition duration-250 group-hover:opacity-70
+                    ">
                       <div class="absolute
                         transform -rotate-45 bg-[#F487CD] text-lg font-black text-white pt-6 px-8 -top-3 -left-9
                         <sm:(text-[12px] -top-1 -left-6.5 pt-3 px-6 pb-0.5)">HOT</div>
-                      <img v-lazyload="product.imageUrl" class="p-2"  />
+                      <img v-lazyload="product.imageUrl" class="p-2 bg-gray-100 "  />
                     </div>
                     <p class="font-black text-gray-600 group-hover:text-[#BAB1FC] <sm:(text-sm)">{{ product.name }}</p>
                     <p class="text-red-500/80 font-black <sm:(text-sm)">{{ `售價：${ product.price }元` }}</p>
@@ -114,11 +116,10 @@
 
 
           <div class="w-[430px]  
-            <xl:(w-4/5 mx-auto)  
+            <xl:(w-4/5 mx-auto mt-16)  
             <md:(w-full px-2)">
             <div class="bg-[#BAD1FC] rounded-tr-[40px]">
-              <h3 class="text-2xl text-white font-extrabold border-b-5 border-white pl-6 pb-1 pt-2.5 w-72 
-                <lg:mt-16">
+              <h3 class="text-2xl text-white font-extrabold border-b-5 border-white pl-6 pb-1 pt-2.5 w-72">
                 Facebook
               </h3>
               <div class="mx-auto pt-4 px-6 justify-center justify-items-center <sm:px-0">
@@ -152,9 +153,6 @@
 
           </div>
         </div>
-
- 
-
       </div>
   
 
@@ -169,7 +167,10 @@ import { NButton, NCarousel, NGrid, NGi, NCard } from 'naive-ui'
 const runtimeConfig = useRuntimeConfig()
 const isLoaded = ref(false)
 
-const { data: hotProducts } = await useFetch(`/api/product/hot`, { method: 'GET' })
+const { data: hotProducts } = await useFetch(`/api/product/hot`, { 
+  method: 'GET',  
+  key: 'hot-products' + Date.now().toString()
+})
 if (!hotProducts.value) hotProducts.value = []
 const { data: bannerData } = await useFetch(`/api/home/banners`, { method: 'GET' })
 if (!bannerData.value) bannerData.value = []
@@ -181,7 +182,7 @@ const tempPreIndex = ref(0)
 const fbUrl = runtimeConfig.public.fbUrl
 
 
-const a = watch(carouselCurrentIndex, (val, prevVal) => {
+watch(carouselCurrentIndex, (val, prevVal) => {
   if (val === prevVal) return
   isAnimating.value = true
   tempPreIndex.value = prevVal
@@ -196,7 +197,17 @@ onMounted(async() => {
   isLoaded.value = true
 })
 
-
+// change image url to 500px
+hotProducts.value.forEach((x, i, a) => {
+  // get base url
+  const arrUrl = x.imageUrl.split('/')
+  const baseUrl = arrUrl.slice(0, -1).join('/')
+  const fileName = arrUrl.pop()
+  const smallFileName = fileName.split('.')[0] + '-x500.jpg'
+  a[i].imageUrl = `${baseUrl}/small/${smallFileName}`
+  
+})
+console.log(hotProducts.value);
 useHead({
   script: [{ 
     async: true,  defer: true, crossorigin: 'anonymous', 

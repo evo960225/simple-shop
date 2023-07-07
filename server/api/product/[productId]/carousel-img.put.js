@@ -1,8 +1,10 @@
 import fs from 'fs'
+import path from 'path'
 import multer from 'multer'
 import jimp from 'jimp'
 import { callNodeListener } from 'h3'
 import db from '@/server/db'
+
 
 
 export default defineEventHandler(async(event) => {
@@ -23,15 +25,20 @@ export default defineEventHandler(async(event) => {
   const carouselImages = fs.readdirSync(imagesDir)
 
   let largestFileName = '';
-  carouselImages.forEach(function(ele) {
-    if(largestFileName < ele) {
-      largestFileName = ele;
+  carouselImages.forEach(function(dirFileName) {
+    const ext = path.extname(dirFileName);
+    if(ext !== '.jpg' && ext !== '.png') {
+      return;
+    }
+    if(largestFileName < dirFileName) {
+      largestFileName = dirFileName;
     }
   });
 
   const ymd_date = Date.now().toString()
   const fileNumber = largestFileName ? parseInt(largestFileName.split('.')[0]) + 1 : 0
   const fileName = `${ymd_date}-${fileNumber.toString().padStart(2, '0')}`
+
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, `${imagesDir}` )
@@ -53,6 +60,8 @@ export default defineEventHandler(async(event) => {
       }
     }
   })
+
+  // upload image
   try {
     await callNodeListener(upload.single('carouselImage'), event.req, event.res)
     if (fileType === "image/png") {
@@ -68,12 +77,33 @@ export default defineEventHandler(async(event) => {
     })
   }
 
+
+  // move file to small folder
+  const smallDir = `${imagesDir}/small`
+  if (!fs.existsSync(smallDir)){
+    fs.mkdirSync(smallDir, { recursive: true });
+  }
+
+  const originFilePath = await compressImageToJpg(
+    `${imagesDir}/${fileName}.jpg`
+  )
+
+  const newFilePath = await compressImageToJpg(
+    `${imagesDir}/${fileName}.jpg`, 
+    `${smallDir}/${fileName}-x500`, 
+    75, 500, 500
+  )
+
+
   if (fileNumber === 0) {
-    const record = await db.product.updateImageUrl(productId, { imageUrl: `/api/public/${carouselDir}/${fileName}.jpg` })
+    const record = await db.product.updateImageUrl(productId, { 
+      imageUrl: `/api/public/${carouselDir}/${fileName}.jpg` 
+    })
   }
   
   return { 
     url: `${fileName}.jpg`,
+    smallUrl: `${newFilePath}`,
     success: true 
   }
 })

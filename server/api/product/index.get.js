@@ -10,6 +10,16 @@ export default defineEventHandler(async(event) => {
   } 
   
   const record = await db.product.getAll()
+
+  // // change small image name
+  // record.forEach((item) => {
+  //   item.carouselImagesSmall = item.carouselImages.map((file) => {
+  //     const ext = path.extname(file);
+  //     const fileName = file.split('.')[0]
+  //     return `${fileName}-x500${ext}`
+  //   })
+  // })
+
   if (!record) {
     throw createError({
       statusCode: 400,

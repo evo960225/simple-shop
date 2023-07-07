@@ -4,6 +4,7 @@ export default defineEventHandler(async(event) => {
 
   const record = await db.product.getShowAll()
   
+
   if (!record) {
     throw createError({
       statusCode: 400,

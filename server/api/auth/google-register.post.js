@@ -2,7 +2,7 @@ import { OAuth2Client } from 'google-auth-library'
 import { PrismaClient } from '@prisma/client'
 import db from '@/server/db'
 import jwt from 'jsonwebtoken'
-import { log } from 'console'
+
 
 const runtimeConfig = useRuntimeConfig()
 const prisma = new PrismaClient()
