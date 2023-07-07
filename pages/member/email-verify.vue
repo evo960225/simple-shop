@@ -25,7 +25,11 @@
 
 <script setup>
 import { NCard, NInput, NInputNumber, NCheckbox, NButton, useMessage } from 'naive-ui';
-const { data: userProfile } = await useFetch('/api/user/profile', { method: 'GET', key: 'user-profile' + Date.now().toString() })
+
+const { data: userProfile } = await useFetch('/api/user/profile', { 
+  method: 'GET', 
+  key: 'user-profile' + Date.now().toString() 
+})
 const email = computed(() => userProfile.value.email)
 const msg = useMessage()
 const isLoading = ref(false)

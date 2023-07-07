@@ -9,11 +9,12 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
         return await navigateTo('/login?member=0') 
       } 
     }
-    if (folderName === 'checkout') {
-      if (!userStore.profile?.emailVerified) {
-        return await navigateTo('/member/email-verify') 
-      } 
-    }
+    // 功能暫時失去
+    // if (folderName === 'checkout') {
+    //   if (!userStore.profile?.emailVerified) {
+    //     return await navigateTo('/member/email-verify') 
+    //   } 
+    // }
   } 
 })
 

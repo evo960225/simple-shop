@@ -1,7 +1,5 @@
 <template>
-  <div class="w-[1000px] mt-6 mb-16  <xl:w-[800px] <md:w-auto <sm:(w-full max-w-[450px])">
-
-
+  <div class="w-[1000px] mt-6 mb-16  <xl:w-[800px] <md:w-auto <sm:(w-full max-w-[450px]) ">
     <!-- :<md game name -->
     <h2 class="hidden mb-3 <md:block">
       <div class=" px-4 py-2 text-xl font-semibold text-red-400 border-b-1 border-gray-200">
@@ -9,12 +7,12 @@
       </div>
     </h2>
 
-    <div class="flex shadow-md <xl:game_info rounded-xl">
+    <div class="flex shadow-md <xl:game_info rounded-xl h-auto">
 
 
       <!-- game info -->
-      <div class=" relative w-[650px] m-1 aspect-square border-r-1 border-light-700 
-        <xl:(w-[500px]) <md:(border-0)
+      <div class="relative w-[600px] h-[600px] m-1 aspect-square border-r-1 border-light-700 
+        <xl:(w-[500px] h-[500px]) <md:(border-0) 
       ">
         <n-carousel
           dot-type="line"
@@ -25,8 +23,8 @@
           :interval="5000"
           class="carousel w-full"
         >
-          <div v-for="img in imageList" class="m-1 aspect-square">
-            <img :src="`${imagePath}/${img}`" class="object-contain aspect-square w-full" />
+          <div v-for="img in imageList" class="m-1">
+            <img :src="`${imagePath}/${img}`" class="object-contain aspect-square w-full min-h-[500px] transform-gpu" />
           </div>
         </n-carousel>
       </div>

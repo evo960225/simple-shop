@@ -14,7 +14,7 @@
         
         <div class="my-5 border-b-1 bg-light-500"></div>
         
-        <p class="text-md px-4  min-h-72 font-semibold tracking-wide text-gray-600 text-justify">
+        <p class="text-md px-4 min-h-72 font-semibold tracking-wide text-gray-600 text-justify">
           {{ introduction }}
         </p>
         
@@ -58,7 +58,7 @@
           autoplay    
           draggable
           :interval="5000"
-          class="carousel w-full h-auto max-h-[465px] m-auto rounded-md <xl:max-h-[665px]"
+          class="carousel w-full h-[465px] m-auto rounded-md <xl:(h-auto aspect-[91/51])"
         >
           <div v-for="url in carouselImages">
             <n-image class="carousel-img w-full" :src="`/api/public/images/game/${gameId}/carousel/${url}`" />

@@ -15,7 +15,9 @@
           v-model:current-index="carouselCurrentIndex"
           class="z-1 carousel w-full m-auto "
         >
-          <div v-for="(data, index) in bannerData" class="w-[1400px] mx-auto <xl:(w-full h-auto)" :class="{'shadow-md shadow-gray-500': isLoaded}">
+          <div v-for="(data, index) in bannerData" 
+            class="max-w-[1400px] mx-auto <xl:(w-full h-auto)" 
+            :class="{'shadow-md shadow-gray-500': isLoaded}">
             <NuxtLink :to="data.hyperLink" class="h-auto">
               <img v-if="index===0" 
                 class="carousel-img animated-element max-h-full max-w-full" :src="data.imageUrl">
@@ -85,7 +87,7 @@
                   
                   <nuxt-link :to="`/store/${product.id}`">
                     <div class="relative overflow-hidden aspect-square border-1 border-gray-300 transition duration-250 group-hover:opacity-70">
-                      <div class="absolute 
+                      <div class="absolute
                         transform -rotate-45 bg-[#F487CD] text-lg font-black text-white pt-6 px-8 -top-3 -left-9
                         <sm:(text-[12px] -top-1 -left-6.5 pt-3 px-6 pb-0.5)">HOT</div>
                       <img v-lazyload="product.imageUrl" class="p-2"  />
@@ -191,9 +193,7 @@ const a = watch(carouselCurrentIndex, (val, prevVal) => {
 
 
 onMounted(async() => {
-
   isLoaded.value = true
-
 })
 
 
