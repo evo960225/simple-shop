@@ -20,7 +20,7 @@
 
       <!-- <md -->
       <div class="menu-icon my-auto" :class="{open:isMenuDrawerActive}" @click="isMenuDrawerActive=!isMenuDrawerActive">
-        <div class="hidden <md:block menu-icon_three-line"></div>
+        <div class="hidden <md:(!block) menu-icon_three-line"></div>
       </div>
     </div>
 

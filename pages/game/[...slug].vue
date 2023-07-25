@@ -60,7 +60,7 @@
           :interval="5000"
           class="carousel w-full h-[465px] m-auto rounded-md <xl:(h-auto aspect-[91/51])"
         >
-          <div v-for="url in carouselImages">
+          <div v-for="url in carouselImages" class>
             <n-image class="carousel-img w-full" :src="`/api/public/images/game/${gameId}/carousel/${url}`" />
           </div>
         </n-carousel>

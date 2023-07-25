@@ -64,8 +64,7 @@ const { data: productData } = await useFetch('/api/product/client', {
 })
 
 // change image url to 500px
-productData.value.forEach((x) => {
-
+productData.value?.forEach((x) => {
   // get base url
   const arrUrl = x.imageUrl.split('/')
   const baseUrl = arrUrl.slice(0, -1).join('/')

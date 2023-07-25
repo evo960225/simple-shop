@@ -92,7 +92,7 @@
                       <div class="absolute
                         transform -rotate-45 bg-[#F487CD] text-lg font-black text-white pt-6 px-8 -top-3 -left-9
                         <sm:(text-[12px] -top-1 -left-6.5 pt-3 px-6 pb-0.5)">HOT</div>
-                      <img v-lazyload="product.imageUrl" class="p-2 bg-gray-100 "  />
+                      <img v-lazyload="product.imageUrl" class="p-2 "  />
                     </div>
                     <p class="font-black text-gray-600 group-hover:text-[#BAB1FC] <sm:(text-sm)">{{ product.name }}</p>
                     <p class="text-red-500/80 font-black <sm:(text-sm)">{{ `售價：${ product.price }元` }}</p>

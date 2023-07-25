@@ -98,4 +98,10 @@ export default defineNuxtConfig({
       ]
     },
   },
+  nitro: {
+    compressPublicAssets: { gzip:false, brotli: true },
+    publicAssets: [{
+      maxAge: 60 * 60 * 24 * 7
+    }]
+  }
 })
